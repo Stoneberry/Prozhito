@@ -1,0 +1,72 @@
+import urllib.request
+import re
+
+# структура таблицы insert into Tages values ("id", "Name", "Text", *"id текста")
+
+def finding_text(text): # - достаю текст и id
+    reg = '"([0-9]+?)","[0-9]+?","(.+?)","1[0-9]{3}-[0-1][0-9]-[0-3][0-9]","0000-00-00","0","0","[0-9]","[0-9]+",".+?"'
+    a1 = re.findall(reg, text)
+    return a1
+
+def work_with_text(): # - открываю записи/ нахожу текст
+    f = open('/Users/Stoneberry/Desktop/курсач/notes.csv', 'r', encoding = 'utf-8')
+    string = f.read()
+    f.close
+    list_text = finding_text(string) # -  массив всех текстов
+    return list_text
+
+def spetial_for(): # - специальная функция, чтобы получить все фамилии из Вики 
+    f = open('list_persons3.txt', 'r', encoding = 'utf-8')
+    array = f.read()
+    f.close()
+    massiv_surnames = re.findall('(.*?) ', array)
+    return massiv_surnames
+
+def personss(list_text, massiv_surnames): # -  поиск фамилии в записях
+    d = {}
+    for note1 in list_text:
+        note = note1[0]
+        note2 = note1[1]
+        for name in massiv_surnames:
+            if name in note2:
+                if note in d:
+                    d[note].append(name)
+                else:
+                    d[note] = []
+                    d[note].append(name)
+    return d
+
+# структура таблицы insert into Tages values ("id", "id Text", "Name")
+# 'insert into Tages values ("' + str(idd) + '", "' + l + '", "' + i + '")' + '\n'
+
+def inserts(d):
+    f = open('Inserts_Names.txt', 'a', encoding = 'utf-8')
+    num = 0
+    for i in d:
+        if type(d[i]) == list:
+            num += len(d[i])
+        else:
+           num += 1
+    s = []
+    number = 1
+    while number <= num:
+        for key in d:
+            if type(d[key]) == list:
+                for value in d[key]:
+                    f.write("insert into Tages values ('%d', '%s', '%s')" % (number, key, value) + '\n')
+                    number += 1
+            else:
+                    f.write("insert into Tages values ('" + str(number) + "', '" + key + "', '" + d[key] +"')" +'\n')
+                number += 1
+    f.close()
+    return
+                
+def final():
+    a0 = work_with_text()
+    a1 = spetial_for()
+    a2 = personss(a0, a1)
+    a3 = inserts(a2)
+    return
+
+if __name__=='__main__':
+    final()
