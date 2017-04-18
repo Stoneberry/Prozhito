@@ -15,57 +15,99 @@ def work_with_text(): # - открываю записи/ нахожу текст
     list_text = finding_text(string) # -  массив всех текстов
     return list_text
 
-def spetial_for(): # - специальная функция, чтобы получить все фамилии из Вики 
-    f = open('list_persons3.txt', 'r', encoding = 'utf-8')
+# Фамилии могут изменяться по падежам по-разному, поэтому должны быть разные регулярные выражения
+
+def special_persons(): # - все фамилии необычные 
+    f = open('list_persons_special.txt', 'r', encoding = 'utf-8')
     array = f.read()
     f.close()
-    massiv_surnames = re.findall('(.*?) ', array)
-    return massiv_surnames
+    massiv_surnames_special = re.findall('(.*?) ', array)
+    return massiv_surnames_special
 
-def personss(list_text, massiv_surnames): # -  поиск фамилии в записях
-    d = {}
-    for note1 in list_text:
-        note = note1[0]
-        note2 = note1[1]
+def normal_persons(): # - все фамилии нормальные
+    f = open('list_persons_normal.txt', 'r', encoding = 'utf-8')
+    array = f.read()
+    f.close()
+    massiv_surnames_normal = re.findall('(.*?) ', array)
+    return massiv_surnames_normal
+
+def massiv_persons(): # - массив все фамилий
+    a1 = special_persons()
+    a2 = normal_persons()
+    for i in a2:
+        a1.append(i)
+    return a1
+
+def special_ending(special, surname): # - вариативность окончаний
+    if special.endswith('ь'):
+        name1 = special[:-1] + '(?:\.|,|\?|!| |ь(?:\.|,|\?| |!)|я(?:\.|,|\?| |!)|е(?:\.|,|\?| |!)|ю(?:\.|,|\?| |!)|ем(?:\.|,|\?| |!)|ях(?:\.|,|\?| |!)|ям(?:\.|,|\?| |!)|ями(?:\.|,|\?| |!)|ях(?:\.|,|\?| |!)|ей(?:\.|,|\?| |!)|и(?:\.|,|\?| |!))' + '|'
+        surname = surname + name1
+    elif special.endswith('ей'):
+        name1 = special[:-1] + '(?:\.|,|\?|!| |ь(?:\.|,|\?| |!)|я(?:\.|,|\?| |!)|е(?:\.|,|\?| |!)|ю(?:\.|,|\?| |!)|ем(?:\.|,|\?| |!)|ях(?:\.|,|\?| |!)|ям(?:\.|,|\?| |!)|ями(?:\.|,|\?| |!)|ях(?:\.|,|\?| |!)|ей(?:\.|,|\?| |!)|и(?:\.|,|\?| |!))'  + '|'
+        surname = surname + name1
+    else:
+        surname = surname + special + '|'
+    return surname
+            
+def surname(massiv_surnames_special, massiv_surnames_normal): # -   создание регулярк
+    surname = ''
+    for special in massiv_surnames_special:
+        surname = special_ending(special, surname)
+    for normal in massiv_surnames_normal:
+        if normal == massiv_surnames_normal[-1]:
+            name2 = normal + '(?:\.|,|\?| |!|а(?:\.|,|\?| |!)|у(?:\.|,|\?| |!)|ом(?:\.|,|\?| |!)|е(?:\.|,|\?| |!)|ов(?:\.|,|\?| |!)|ы(?:\.|,|\?| |!)|ам(?:\.|,|\?| |!)|ами(?:\.|,|\?| |!)|ах(?:\.|,|\?| |!))'
+            surname = surname + name2
+        else:
+            name2 = normal + '(?:\.|,|\?| |!|а(?:\.|,|\?| |!)|у(?:\.|,|\?| |!)|ом(?:\.|,|\?| |!)|е(?:\.|,|\?| |!)|ов(?:\.|,|\?| |!)|ы(?:\.|,|\?| |!)|ам(?:\.|,|\?| |!)|ами(?:\.|,|\?| |!)|ах(?:\.|,|\?| |!))' + '|'
+            surname = surname + name2
+    return surname
+
+def actual_surname(pip): # - какая именно фамилия встретилась
+    massiv_surnames = massiv_persons()
+    surnames = []
+    for i in pip:
         for name in massiv_surnames:
-            if name in note2:
-                if note in d:
-                    d[note].append(name)
+            if name in i:
+                if name in surnames:
+                    continue
                 else:
-                    d[note] = []
-                    d[note].append(name)
+                    surnames.append(name)
+    return surnames
+
+def searching(list_text, surname): # - поиск в текстах
+    d = {}
+    for line in list_text:
+        text_id = line[0]
+        text = line[1]
+        pip = re.findall(surname, text)
+        if pip!=[]:
+            d[text_id] = actual_surname(pip)
     return d
 
 # структура таблицы insert into Tages values ("id", "id Text", "Name")
 # 'insert into Tages values ("' + str(idd) + '", "' + l + '", "' + i + '")' + '\n'
 
 def inserts(d):
-    f = open('Inserts_Names.txt', 'a', encoding = 'utf-8')
     num = 0
-    for i in d:
-        if type(d[i]) == list:
-            num += len(d[i])
-        else:
-           num += 1
-    s = []
     number = 1
+    for i in d:
+        num += len(d[i])
+    f = open('Inserts_Names.txt', 'a', encoding = 'utf-8')
     while number <= num:
         for key in d:
-            if type(d[key]) == list:
-                for value in d[key]:
-                    f.write("insert into Tages values ('%d', '%s', '%s')" % (number, key, value) + '\n')
-                    number += 1
-            else:
-                    f.write("insert into Tages values ('" + str(number) + "', '" + key + "', '" + d[key] +"')" +'\n')
-                number += 1
+            for value in d[key]:
+                f.write("insert into Tages values ('%d', '%s', '%s')" % (number, key, value) + '\n')
+                number += 1     
     f.close()
     return
                 
 def final():
-    a0 = work_with_text()
-    a1 = spetial_for()
-    a2 = personss(a0, a1)
-    a3 = inserts(a2)
+    a1 = work_with_text()
+    a2 = special_persons()
+    a3 = normal_persons()
+    a5 = surname(a2, a3)
+    a6 = searching(a1, a5)
+    a7 = inserts(a6)
     return
 
 if __name__=='__main__':
