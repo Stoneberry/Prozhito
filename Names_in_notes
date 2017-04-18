@@ -88,6 +88,7 @@ def searching(list_text, surname): # - поиск в текстах
 # 'insert into Tages values ("' + str(idd) + '", "' + l + '", "' + i + '")' + '\n'
 
 def inserts(d):
+    values = []
     num = 0
     number = 1
     for i in d:
@@ -96,8 +97,17 @@ def inserts(d):
     while number <= num:
         for key in d:
             for value in d[key]:
+                values.append(value)
                 f.write("insert into Tages values ('%d', '%s', '%s')" % (number, key, value) + '\n')
                 number += 1     
+    f.close()
+    return values
+    
+def numbers(values): # - специальная фунцкция для частотности
+    f = open('Частотность_фамилий.txt', 'a', encoding = 'utf-8')
+    numbers = Counter(values)
+    for i in dict(numbers):
+       f.write(i + ': ' + str(numbers[i]) + '\n')
     f.close()
     return
                 
@@ -108,6 +118,7 @@ def final():
     a5 = surname(a2, a3)
     a6 = searching(a1, a5)
     a7 = inserts(a6)
+    a8 = numbers(a7)
     return
 
 if __name__=='__main__':
