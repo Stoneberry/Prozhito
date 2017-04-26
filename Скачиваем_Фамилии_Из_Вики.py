@@ -24,7 +24,7 @@ def reg_for_person(html): # - достаю фамилии
 
 def separate(mnoj_person):
     normal = []  # - изменение по падежам нормальное(прибавление к основе окончания)
-##    speсial = [] # - изменение по падежам особенное 
+    speсial = [] # - изменение по падежам особенное 
     alf1 = 'нтрсглдцмвкфшбжзпхч'
     for name in mnoj_person:
         for i in alf1:
