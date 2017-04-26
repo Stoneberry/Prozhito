@@ -32,7 +32,7 @@ def normal_persons(): # - все фамилии нормальные
     massiv_surnames_normal = re.findall('(.*?) ', array)
     return massiv_surnames_normal
 
-def massiv_persons(): # - массив все фамилий
+def massiv_persons(): # - массив всеx фамилий
     a1 = special_persons()
     a2 = normal_persons()
     for i in a2:
@@ -47,7 +47,7 @@ def special_ending(special, surname): # - вариативность оконч�
         name1 = special[:-1] + '(?:ь|я|е|ю|ем|ях|ям|ями|ях|ей|и|\\b)' + '\\b'  + '|'
         surname = surname + name1
     else:
-        surname = surname + special + '|'
+        surname = surname + special + '\\b' + '|'
     return surname
             
 def surname(massiv_surnames_special, massiv_surnames_normal): # -   создание регулярк
@@ -60,15 +60,17 @@ def surname(massiv_surnames_special, massiv_surnames_normal): # -   созда�
             surname = surname + name2
         else:
             name2 = normal + '(?:а|у|ом|е|ов|ы|ам|ами|ах|\\b)' + '\\b' + '|'
-            surname = surname + name2
+            surname = surname + name2 
     return surname
 
-def actual_surname(pip): # - какая именно фамилия встретилась
-    massiv_surnames = massiv_persons()
+def actual_surname(surname, pip): # - какая именно фамилия встретилась 2
     surnames = []
-    for i in pip:
-        for name in massiv_surnames:
-            if name in i:
+    a1 = massiv_persons()
+    for line in pip:
+        for name in a1:
+            name1 = name + '(?:а|у|ом|е|ов|ы|ам|ами|ах|ь|я|е|ю|ем|ях|ям|ями|ях|ей|и|\\b)'
+            regex = re.findall(name1, line)
+            if regex != []:
                 if name in surnames:
                     continue
                 else:
@@ -76,20 +78,33 @@ def actual_surname(pip): # - какая именно фамилия встрет
     return surnames
 
 def searching(list_text, surname): # - поиск в текстах
-    d = {}
+    d = {} # - {id : surname}
     for line in list_text:
         text_id = line[0]
         text = line[1]
         pip = re.findall(surname, text)
         if pip!=[]:
-            d[text_id] = actual_surname(pip)
+            d[text_id] = actual_surname(surname, pip)
 ##    f = open('pizza.txt', 'a', encoding = 'utf-8')
 ##    f.write(str(d))
 ##    f.close()
     return d
 
-# структура таблицы insert into Tages values ("id", "id Text", "Name")
-# 'insert into Tages values ("' + str(idd) + '", "' + l + '", "' + i + '")' + '\n'
+def howmany(list_text, surname): # - поиск в текстах
+    d2 = {} # - {surname : number}
+    for line in list_text:
+        text_id = line[0]
+        text = line[1]
+        pip = re.findall(surname, text)
+        if pip!=[]:
+            d2[actual_surname(pip)] = len(pip)
+    f = open('pizza23.txt', 'a', encoding = 'utf-8')
+    f.write(str(d2))
+    f.close()
+    return d2 
+
+## структура таблицы insert into Tages values ("id", "id Text", "Name")
+## 'insert into Tages values ("' + str(idd) + '", "' + l + '", "' + i + '")' + '\n'
 
 def inserts(d):
     values = []
