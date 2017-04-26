@@ -1,5 +1,6 @@
 import urllib.request
 import re
+from collections import Counter
 
 # структура таблицы insert into Tages values ("id", "Name", "Text", *"id текста")
 
@@ -40,10 +41,10 @@ def massiv_persons(): # - массив все фамилий
 
 def special_ending(special, surname): # - вариативность окончаний
     if special.endswith('ь'):
-        name1 = special[:-1] + '(?:\.|,|\?|!| |ь(?:\.|,|\?| |!)|я(?:\.|,|\?| |!)|е(?:\.|,|\?| |!)|ю(?:\.|,|\?| |!)|ем(?:\.|,|\?| |!)|ях(?:\.|,|\?| |!)|ям(?:\.|,|\?| |!)|ями(?:\.|,|\?| |!)|ях(?:\.|,|\?| |!)|ей(?:\.|,|\?| |!)|и(?:\.|,|\?| |!))' + '|'
+        name1 = special[:-1] + '(?:ь|я|е|ю|ем|ях|ям|ями|ях|ей|и|\\b)' + '\\b' + '|'
         surname = surname + name1
     elif special.endswith('ей'):
-        name1 = special[:-1] + '(?:\.|,|\?|!| |ь(?:\.|,|\?| |!)|я(?:\.|,|\?| |!)|е(?:\.|,|\?| |!)|ю(?:\.|,|\?| |!)|ем(?:\.|,|\?| |!)|ях(?:\.|,|\?| |!)|ям(?:\.|,|\?| |!)|ями(?:\.|,|\?| |!)|ях(?:\.|,|\?| |!)|ей(?:\.|,|\?| |!)|и(?:\.|,|\?| |!))'  + '|'
+        name1 = special[:-1] + '(?:ь|я|е|ю|ем|ях|ям|ями|ях|ей|и|\\b)' + '\\b'  + '|'
         surname = surname + name1
     else:
         surname = surname + special + '|'
@@ -55,10 +56,10 @@ def surname(massiv_surnames_special, massiv_surnames_normal): # -   созда�
         surname = special_ending(special, surname)
     for normal in massiv_surnames_normal:
         if normal == massiv_surnames_normal[-1]:
-            name2 = normal + '(?:\.|,|\?| |!|а(?:\.|,|\?| |!)|у(?:\.|,|\?| |!)|ом(?:\.|,|\?| |!)|е(?:\.|,|\?| |!)|ов(?:\.|,|\?| |!)|ы(?:\.|,|\?| |!)|ам(?:\.|,|\?| |!)|ами(?:\.|,|\?| |!)|ах(?:\.|,|\?| |!))'
+            name2 = normal + '(?:а|у|ом|е|ов|ы|ам|ами|ах|\\b)' + '\\b'
             surname = surname + name2
         else:
-            name2 = normal + '(?:\.|,|\?| |!|а(?:\.|,|\?| |!)|у(?:\.|,|\?| |!)|ом(?:\.|,|\?| |!)|е(?:\.|,|\?| |!)|ов(?:\.|,|\?| |!)|ы(?:\.|,|\?| |!)|ам(?:\.|,|\?| |!)|ами(?:\.|,|\?| |!)|ах(?:\.|,|\?| |!))' + '|'
+            name2 = normal + '(?:а|у|ом|е|ов|ы|ам|ами|ах|\\b)' + '\\b' + '|'
             surname = surname + name2
     return surname
 
@@ -82,6 +83,9 @@ def searching(list_text, surname): # - поиск в текстах
         pip = re.findall(surname, text)
         if pip!=[]:
             d[text_id] = actual_surname(pip)
+##    f = open('pizza.txt', 'a', encoding = 'utf-8')
+##    f.write(str(d))
+##    f.close()
     return d
 
 # структура таблицы insert into Tages values ("id", "id Text", "Name")
@@ -102,7 +106,7 @@ def inserts(d):
                 number += 1     
     f.close()
     return values
-    
+
 def numbers(values): # - специальная фунцкция для частотности
     f = open('Частотность_фамилий.txt', 'a', encoding = 'utf-8')
     numbers = Counter(values)
