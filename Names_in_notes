@@ -1,8 +1,25 @@
 import urllib.request
 import re
 from collections import Counter
+import os
 
 # структура таблицы insert into Tages values ("id", "Name", "Text", *"id текста")
+
+def newdirs1():
+    z = 'input_texts' 
+    if os.path.exists(z):
+        True
+    else:
+        os.makedirs(z)
+    return
+
+def newdirs2():
+    l = 'output_texts' 
+    if os.path.exists(l):
+        True
+    else:
+        os.makedirs(l)
+    return
 
 def finding_text(text): # - достаю текст и id
     reg = '"([0-9]+?)","[0-9]+?","(.+?)","1[0-9]{3}-[0-1][0-9]-[0-3][0-9]","0000-00-00","0","0","[0-9]","[0-9]+",".+?"'
@@ -10,7 +27,7 @@ def finding_text(text): # - достаю текст и id
     return a1
 
 def work_with_text(): # - открываю записи/ нахожу текст
-    f = open('/Users/Stoneberry/Desktop/курсач/notes.csv', 'r', encoding = 'utf-8')
+    f = open('notes.csv', 'r', encoding = 'utf-8')
     string = f.read()
     f.close
     list_text = finding_text(string) # -  массив всех текстов
@@ -63,7 +80,7 @@ def surname(massiv_surnames_special, massiv_surnames_normal): # -   созда�
             surname = surname + name2 
     return surname
 
-def actual_surname(surname, pip): # - какая именно фамилия встретилась 2
+def actual_surname(pip): # - какая именно фамилия встретилась 2
     surnames = []
     a1 = massiv_persons()
     for line in pip:
@@ -79,65 +96,41 @@ def actual_surname(surname, pip): # - какая именно фамилия в�
 
 def searching(list_text, surname): # - поиск в текстах
     d = {} # - {id : surname}
+    formystem = {} # - {id : [text, [surname]]}
     for line in list_text:
         text_id = line[0]
         text = line[1]
         pip = re.findall(surname, text)
         if pip!=[]:
-            d[text_id] = actual_surname(surname, pip)
-##    f = open('pizza.txt', 'a', encoding = 'utf-8')
-##    f.write(str(d))
-##    f.close()
-    return d
-
-def howmany(list_text, surname): # - поиск в текстах
-    d2 = {} # - {surname : number}
-    for line in list_text:
-        text_id = line[0]
-        text = line[1]
-        pip = re.findall(surname, text)
-        if pip!=[]:
-            d2[actual_surname(pip)] = len(pip)
-    f = open('pizza23.txt', 'a', encoding = 'utf-8')
-    f.write(str(d2))
+##            d[text_id] = actual_surname(pip)
+            names = actual_surname(pip)
+            formystem[text_id] = []
+            formystem[text_id].append(text)
+            formystem[text_id].append(names)
+    f = open('input_texts/rouge.txt', 'a', encoding = 'utf-8')
+    for idd in formystem:
+        for person in formystem[idd][1]:
+              f.write('\t'+ idd + ' ' + person + ' ' + formystem[idd][0]) # - 123 - разделитель
     f.close()
-    return d2 
+    return formystem
 
-## структура таблицы insert into Tages values ("id", "id Text", "Name")
-## 'insert into Tages values ("' + str(idd) + '", "' + l + '", "' + i + '")' + '\n'
-
-def inserts(d):
-    values = []
-    num = 0
-    number = 1
-    for i in d:
-        num += len(d[i])
-    f = open('Inserts_Names.txt', 'a', encoding = 'utf-8')
-    while number <= num:
-        for key in d:
-            for value in d[key]:
-                values.append(value)
-                f.write("insert into Tages values ('%d', '%s', '%s')" % (number, key, value) + '\n')
-                number += 1     
-    f.close()
-    return values
-
-def numbers(values): # - специальная фунцкция для частотности
-    f = open('Частотность_фамилий.txt', 'a', encoding = 'utf-8')
-    numbers = Counter(values)
-    for i in dict(numbers):
-       f.write(i + ': ' + str(numbers[i]) + '\n')
-    f.close()
+def mystem():
+    inp = "input_texts"
+    lst = os.listdir(inp)
+    for fl in lst:
+        os.system(r"/Users/Stoneberry/Desktop/курсач/mystem " + inp + os.sep + fl + " output_texts" + os.sep + fl + " -cid")
     return
+
                 
 def final():
+    s0 = newdirs1()
+    s1 = newdirs2()
     a1 = work_with_text()
     a2 = special_persons()
     a3 = normal_persons()
     a5 = surname(a2, a3)
     a6 = searching(a1, a5)
-    a7 = inserts(a6)
-    a8 = numbers(a7)
+    s7 = mystem()
     return
 
 if __name__=='__main__':
