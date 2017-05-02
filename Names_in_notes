@@ -65,7 +65,7 @@ def normal_persons(): # - все фамилии нормальные
     f = open('list_persons_normal.txt', 'r', encoding = 'utf-8')
     array = f.read()
     f.close()
-    massiv_surnames_normal = re.findall('(.*?) ', array)
+    massiv_surnames_normal = re.findall('(.*?)\t', array)
     return massiv_surnames_normal
 
 ##def massiv_persons(): # - массив всеx фамилий
@@ -142,18 +142,24 @@ def nicks(names):
     leni = Lenin()
     stal = Stalin()
     hitl = Hitler()
+    inn = []
+    out = []
     for name in names:
         if name in leni:
-            names.add('Ленин')
-            names.discard(name)
+            inn.append('Ленин')
+            out.append(name)
         elif name in stal:
-            names.add('Сталин')
-            names.discard(name)
+            inn.append('Сталин')
+            out.append(name)
         elif name in hitl:
-            names.add('Гитлер')
-            names.discard(name)
+            inn.append('Гитлер')
+            out.append(name)           
         else:
             continue
+    for i in inn:
+        names.add(i)
+    for l in out:
+        names.discard(l)
     return names
 
 def searching(list_text, surname,  massiv_surnames_special, massiv_surnames_normal): # - поиск в текстах
@@ -189,8 +195,7 @@ def mystem():
     for fl in lst:
         os.system(r"/Users/Stoneberry/Desktop/курсач/mystem " + inp + os.sep + fl + " output_texts" + os.sep + fl + " -cid")
     return
-
-                
+              
 def final():
     s0 = newdirs1()
     s1 = newdirs2()
