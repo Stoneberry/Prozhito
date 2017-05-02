@@ -33,6 +33,25 @@ def work_with_text(): # - открываю записи/ нахожу текст
     list_text = finding_text(string) # -  массив всех текстов
     return list_text
 
+
+def Lenin():
+    f = open('Nicknames_Lenin.txt', 'r', encoding = 'utf-8')
+    strings = f.read()
+    lenin = re.findall('(.*?)\t', strings)
+    return lenin
+
+def Stalin():
+    f = open('Nicknames_Stalin.txt', 'r', encoding = 'utf-8')
+    strings = f.read()
+    stalin = re.findall('(.*?)\t', strings)
+    return stalin
+
+def Hitler():
+    f = open('Nicknames_Hitler.txt', 'r', encoding = 'utf-8')
+    strings = f.read()
+    hitler = re.findall('(.*?)\t', strings)
+    return hitler
+
 # Фамилии могут изменяться по падежам по-разному, поэтому должны быть разные регулярные выражения
 
 def special_persons(): # - все фамилии необычные 
@@ -103,38 +122,42 @@ def surname(massiv_surnames_special, massiv_surnames_normal): # -   созда�
     return surname
 
 def actual_surname(pip, massiv_surnames_special, massiv_surnames_normal): # - какая именно фамилия встретилась 2
-    surnames = []
+    surnames = set()
     for line in pip:
         for special in massiv_surnames_special:
             name1 = special_ending(special, '')
             name = name1.strip('\\b|')
             regex = re.findall(name, line)
             if regex != []:
-                if special in surnames:
-                    continue
-                else:
-                    surnames.append(special)
+                surnames.add(special)
         for normal in massiv_surnames_normal:
             name1 = normal_ending(special, '', massiv_surnames_normal)
             name = name1.strip('\\b|')
             regex = re.findall(name, line)
             if regex != []:
-                if normal in surnames:
-                    continue
-                else:
-                    surnames.append(normal)
-##        for name in a1:
-##            name1 = name + '(?:а|у|ом|е|ов|ы|ам|ами|ах|ь|я|е|ю|ем|ях|ям|ями|ях|ей|и|\\b)'
-##            regex = re.findall(name1, line)
-##            if regex != []:
-##                if name in surnames:
-##                    continue
-##                else:
-##                    surnames.append(name)
+                surnames.add(normal)
     return surnames
 
+def nicks(names):
+    leni = Lenin()
+    stal = Stalin()
+    hitl = Hitler()
+    for name in names:
+        if name in leni:
+            names.add('Ленин')
+            names.discard(name)
+        elif name in stal:
+            names.add('Сталин')
+            names.discard(name)
+        elif name in hitl:
+            names.add('Гитлер')
+            names.discard(name)
+        else:
+            continue
+    return names
+
 def searching(list_text, surname,  massiv_surnames_special, massiv_surnames_normal): # - поиск в текстах
-    d = {} # - {id : surname}
+##    d = {} # - {id : surname}
     formystem = {} # - {id : [text, [surname]]}
     for line in list_text:
         text_id = line[0]
@@ -142,16 +165,23 @@ def searching(list_text, surname,  massiv_surnames_special, massiv_surnames_norm
         pip = re.findall(surname, text)
         if pip!=[]:
 ##            d[text_id] = actual_surname(pip)
-            names = actual_surname(pip, massiv_surnames_special, massiv_surnames_normal)
+            names = actual_surname(pip, massiv_surnames_special, massiv_surnames_normal) # = set
+            a1 = nicks(names)
+            a2 = []
+            for i in a1:
+                a2.append(i)
             formystem[text_id] = []
             formystem[text_id].append(text)
-            formystem[text_id].append(names)
+            formystem[text_id].append(a2)
+    return formystem
+
+def for_mystem(formystem): 
     f = open('input_texts/rouge.txt', 'a', encoding = 'utf-8')
     for idd in formystem:
         for person in formystem[idd][1]:
-              f.write('\t'+ idd + ' ' + person + ' ' + formystem[idd][0]) # - 123 - разделитель
+              f.write('\t'+ idd + ' ' + person + ' ' + formystem[idd][0])
     f.close()
-    return formystem
+    return 
 
 def mystem():
     inp = "input_texts"
@@ -169,6 +199,7 @@ def final():
     a3 = normal_persons()
     a5 = surname(a2, a3)
     a6 = searching(a1, a5, a2, a3)
+    s6 = for_mystem(a6)
     s7 = mystem()
     return
 
