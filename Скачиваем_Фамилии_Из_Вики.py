@@ -22,9 +22,20 @@ def reg_for_person(html): # - достаю фамилии
             mnoj_person.add(a2[0])
     return mnoj_person
 
+def reg_for_person2(html):
+    reg = '<strong>(.*?)(?:\\n.*?)?' + '</strong>'
+    a1 = re.findall(reg, html)
+    mnoj_person = set()
+    for i in a1:
+        surname = re.sub('\r', '', i)
+        if surname != 'f.':
+            if surname!= '':
+                mnoj_person.add(surname)
+    return mnoj_person
+
 def separate(mnoj_person):
     normal = []  # - изменение по падежам нормальное(прибавление к основе окончания)
-    speсial = [] # - изменение по падежам особенное 
+ #   speсial = [] # - изменение по падежам особенное 
     alf1 = 'нтрсглдцмвкфшбжзпхч'
     for name in mnoj_person:
         for i in alf1:
@@ -46,10 +57,20 @@ def load_person(): # - скачиваю страницы со списком п�
         a3 = separate(a2)
     return
 
-def final():
-    a0 = load_person()
+def load_person2():
+    links = ['http://www.examen.ru/add/manual/school-subjects/social-sciences/history/istoricheskie-deyateli/istoricheskie-deyateli-rossii/voennyie-deyateli-perioda-grazhdanskoj-i-velikoj-otechestvennoj-vojn', 'http://www.examen.ru/add/manual/school-subjects/social-sciences/history/istoricheskie-deyateli/istoricheskie-deyateli-rossii/politicheskie-i-gosudarstvennyie-deyateli-sssr']
+    for link in links:
+        req = urllib.request.Request(link)
+        with urllib.request.urlopen(req) as response:
+            html = response.read().decode('utf-8')
+            a2 = reg_for_person2(html)
+            a3 = separate(a2)
     return
 
+def final():
+    a0 = load_person()
+    a1 = load_person2()
+    return
 
 if __name__=='__main__':
     final()
