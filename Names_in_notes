@@ -39,7 +39,7 @@ def special_persons(): # - все фамилии необычные
     f = open('list_persons_special.txt', 'r', encoding = 'utf-8')
     array = f.read()
     f.close()
-    massiv_surnames_special = re.findall('(.*?) ', array)
+    massiv_surnames_special = re.findall('(.*?)\t', array)
     return massiv_surnames_special
 
 def normal_persons(): # - все фамилии нормальные
@@ -49,52 +49,91 @@ def normal_persons(): # - все фамилии нормальные
     massiv_surnames_normal = re.findall('(.*?) ', array)
     return massiv_surnames_normal
 
-def massiv_persons(): # - массив всеx фамилий
-    a1 = special_persons()
-    a2 = normal_persons()
-    for i in a2:
-        a1.append(i)
-    return a1
+##def massiv_persons(): # - массив всеx фамилий
+##    a1 = special_persons()
+##    a2 = normal_persons()
+##    for i in a2:
+##        a1.append(i)
+##    return a1
 
 def special_ending(special, surname): # - вариативность окончаний
     if special.endswith('ь'):
-        name1 = special[:-1] + '(?:ь|я|е|ю|ем|ях|ям|ями|ях|ей|и|\\b)' + '\\b' + '|'
+        name1 = special[:-1] + '(?:ь|я|е|ю|ем|ях|ям|ями|ях|ей|и)' + '\\b' + '|'
         surname = surname + name1
-    elif special.endswith('ей'):
-        name1 = special[:-1] + '(?:ь|я|е|ю|ем|ях|ям|ями|ях|ей|и|\\b)' + '\\b'  + '|'
+    elif special.endswith('й'):
+        name1 = special[:-2] + '(?:ей|ея|ею|еем|ее|еи|еев|еям|еями|еях|ий|его|ему|им|ем|ие|их|им|ими|ому|ого|ом)' + '\\b'  + '|'
+        surname = surname + name1
+    elif special.endswith('пролетариата'):
+        a1 = special.split(' ')
+        name1 = a1[0][:-1] + '(?:ь|я|е|ю|ем|ях|ям|ями|ях|ей|и) ' + a1[1] + '\\b' + '|'
         surname = surname + name1
     else:
         surname = surname + special + '\\b' + '|'
     return surname
+
+def normal_ending(normal, surname, massiv_surnames_normal):
+    if normal.endswith('народов'):
+        a1 = normal.split(' ')
+        name2 = a1[0][:2] + '(?:ец|ца|цу|цом|це|цы|цов|цах|цами|цам) ' + a1[1] + '\\b' + '|'
+        surname = surname + name2
+    elif normal.startswith('Владимир'):
+        a1 = normal.split(' ')
+        name2 = a1[0]  + '(?:\\b|а|у|ом|е|ов|ы|ам|ами|ах) ' + a1[1] + '(?:\\b|а|у|ом|е|ов|ы|ам|ами|ах)' + '\\b' + '|'
+    elif normal == massiv_surnames_normal[-1]:
+        name2 = normal + '(?:\\b|а|у|ом|е|ов|ы|ам|ами|ах)' + '\\b'
+        surname = surname + name2
+    else:
+        name2 = normal + '(?:\\b|а|у|ом|е|ов|ы|ам|ами|ах)' + '\\b' + '|'
+        surname = surname + name2
+    return surname 
+    
             
 def surname(massiv_surnames_special, massiv_surnames_normal): # -   создание регулярк
     surname = ''
     for special in massiv_surnames_special:
         surname = special_ending(special, surname)
     for normal in massiv_surnames_normal:
-        if normal == massiv_surnames_normal[-1]:
-            name2 = normal + '(?:а|у|ом|е|ов|ы|ам|ами|ах|\\b)' + '\\b'
-            surname = surname + name2
-        else:
-            name2 = normal + '(?:а|у|ом|е|ов|ы|ам|ами|ах|\\b)' + '\\b' + '|'
-            surname = surname + name2 
+        surname = normal_ending(normal, surname, massiv_surnames_normal)
+##        if normal == massiv_surnames_normal[-1]:
+##            name2 = normal + '(?:а|у|ом|е|ов|ы|ам|ами|ах|\\b)' + '\\b'
+##            surname = surname + name2
+##        else:
+##            name2 = normal + '(?:а|у|ом|е|ов|ы|ам|ами|ах|\\b)' + '\\b' + '|'
+##            surname = surname + name2 
     return surname
 
-def actual_surname(pip): # - какая именно фамилия встретилась 2
+def actual_surname(pip, massiv_surnames_special, massiv_surnames_normal): # - какая именно фамилия встретилась 2
     surnames = []
-    a1 = massiv_persons()
     for line in pip:
-        for name in a1:
-            name1 = name + '(?:а|у|ом|е|ов|ы|ам|ами|ах|ь|я|е|ю|ем|ях|ям|ями|ях|ей|и|\\b)'
-            regex = re.findall(name1, line)
+        for special in massiv_surnames_special:
+            name1 = special_ending(special, '')
+            name = name1.strip('\\b|')
+            regex = re.findall(name, line)
             if regex != []:
-                if name in surnames:
+                if special in surnames:
                     continue
                 else:
-                    surnames.append(name)
+                    surnames.append(special)
+        for normal in massiv_surnames_normal:
+            name1 = normal_ending(special, '', massiv_surnames_normal)
+            name = name1.strip('\\b|')
+            regex = re.findall(name, line)
+            if regex != []:
+                if normal in surnames:
+                    continue
+                else:
+                    surnames.append(normal)
+##        for name in a1:
+##            name1 = name + '(?:а|у|ом|е|ов|ы|ам|ами|ах|ь|я|е|ю|ем|ях|ям|ями|ях|ей|и|\\b)'
+##            regex = re.findall(name1, line)
+##            if regex != []:
+##                if name in surnames:
+##                    continue
+##                else:
+##                    surnames.append(name)
     return surnames
 
-def searching(list_text, surname): # - поиск в текстах
+def searching(list_text, surname,  massiv_surnames_special, massiv_surnames_normal): # - поиск в текстах
     d = {} # - {id : surname}
     formystem = {} # - {id : [text, [surname]]}
     for line in list_text:
@@ -103,7 +142,7 @@ def searching(list_text, surname): # - поиск в текстах
         pip = re.findall(surname, text)
         if pip!=[]:
 ##            d[text_id] = actual_surname(pip)
-            names = actual_surname(pip)
+            names = actual_surname(pip, massiv_surnames_special, massiv_surnames_normal)
             formystem[text_id] = []
             formystem[text_id].append(text)
             formystem[text_id].append(names)
@@ -129,7 +168,7 @@ def final():
     a2 = special_persons()
     a3 = normal_persons()
     a5 = surname(a2, a3)
-    a6 = searching(a1, a5)
+    a6 = searching(a1, a5, a2, a3)
     s7 = mystem()
     return
 
