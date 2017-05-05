@@ -131,7 +131,7 @@ def actual_surname(pip, massiv_surnames_special, massiv_surnames_normal): # - к
             if regex != []:
                 surnames.add(special)
         for normal in massiv_surnames_normal:
-            name1 = normal_ending(special, '', massiv_surnames_normal)
+            name1 = normal_ending(normal, '', massiv_surnames_normal)
             name = name1.strip('\\b|')
             regex = re.findall(name, line)
             if regex != []:
