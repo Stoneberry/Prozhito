@@ -33,24 +33,24 @@ def work_with_text(): # - открываю записи/ нахожу текст
     list_text = finding_text(string) # -  массив всех текстов
     return list_text
 
-
-def Lenin():
-    f = open('Nicknames_Lenin.txt', 'r', encoding = 'utf-8')
-    strings = f.read()
-    lenin = re.findall('(.*?)\t', strings)
-    return lenin
-
-def Stalin():
-    f = open('Nicknames_Stalin.txt', 'r', encoding = 'utf-8')
-    strings = f.read()
-    stalin = re.findall('(.*?)\t', strings)
-    return stalin
-
-def Hitler():
-    f = open('Nicknames_Hitler.txt', 'r', encoding = 'utf-8')
-    strings = f.read()
-    hitler = re.findall('(.*?)\t', strings)
-    return hitler
+##
+##def Lenin():
+##    f = open('Nicknames_Lenin.txt', 'r', encoding = 'utf-8')
+##    strings = f.read()
+##    lenin = re.findall('(.*?)\t', strings)
+##    return lenin
+##
+##def Stalin():
+##    f = open('Nicknames_Stalin.txt', 'r', encoding = 'utf-8')
+##    strings = f.read()
+##    stalin = re.findall('(.*?)\t', strings)
+##    return stalin
+##
+##def Hitler():
+##    f = open('Nicknames_Hitler.txt', 'r', encoding = 'utf-8')
+##    strings = f.read()
+##    hitler = re.findall('(.*?)\t', strings)
+##    return hitler
 
 # Фамилии могут изменяться по падежам по-разному, поэтому должны быть разные регулярные выражения
 
@@ -106,20 +106,13 @@ def normal_ending(normal, surname, massiv_surnames_normal):
         name2 = normal + '(?:\\b|а|у|ом|е|ов|ы|ам|ами|ах)' + '\\b' + '|'
         surname = surname + name2
     return surname
-    
-            
+
 def surname(massiv_surnames_special, massiv_surnames_normal): # -   создание регулярк
     surname = ''
     for special in massiv_surnames_special:
         surname = special_ending(special, surname)
     for normal in massiv_surnames_normal:
         surname = normal_ending(normal, surname, massiv_surnames_normal)
-##        if normal == massiv_surnames_normal[-1]:
-##            name2 = normal + '(?:а|у|ом|е|ов|ы|ам|ами|ах|\\b)' + '\\b'
-##            surname = surname + name2
-##        else:
-##            name2 = normal + '(?:а|у|ом|е|ов|ы|ам|ами|ах|\\b)' + '\\b' + '|'
-##            surname = surname + name2 
     return surname
 
 def actual_surname(pip, massiv_surnames_special, massiv_surnames_normal): # - какая именно фамилия встретилась 2
@@ -139,29 +132,29 @@ def actual_surname(pip, massiv_surnames_special, massiv_surnames_normal): # - к
                 surnames.add(normal)
     return surnames
 
-def nicks(names):
-    leni = Lenin()
-    stal = Stalin()
-    hitl = Hitler()
-    inn = []
-    out = []
-    for name in names:
-        if name in leni:
-            inn.append('Ленин')
-            out.append(name)
-        elif name in stal:
-            inn.append('Сталин')
-            out.append(name)
-        elif name in hitl:
-            inn.append('Гитлер')
-            out.append(name)           
-        else:
-            continue
-    for i in inn:
-        names.add(i)
-    for l in out:
-        names.discard(l)
-    return names
+##def nicks(names):
+##    leni = Lenin()
+##    stal = Stalin()
+##    hitl = Hitler()
+##    inn = []
+##    out = []
+##    for name in names:
+##        if name in leni:
+##            inn.append('Ленин')
+##            out.append(name)
+##        elif name in stal:
+##            inn.append('Сталин')
+##            out.append(name)
+##        elif name in hitl:
+##            inn.append('Гитлер')
+##            out.append(name)           
+##        else:
+##            continue
+##    for i in inn:
+##        names.add(i)
+##    for l in out:
+##        names.discard(l)
+##    return names
 
 def searching(list_text, surname,  massiv_surnames_special, massiv_surnames_normal): # - поиск в текстах
 ##    d = {} # - {id : surname}
@@ -173,9 +166,9 @@ def searching(list_text, surname,  massiv_surnames_special, massiv_surnames_norm
         if pip!=[]:
 ##            d[text_id] = actual_surname(pip)
             names = actual_surname(pip, massiv_surnames_special, massiv_surnames_normal) # = set
-            a1 = nicks(names)
+ #           a1 = nicks(names)
             a2 = []
-            for i in a1:
+            for i in names:
                 a2.append(i)
             formystem[text_id] = []
             formystem[text_id].append(text)
