@@ -20,7 +20,9 @@ def endsent(word1):
 
 def startsent(word2):
     start = '(*«:;-'
-    if word2[0] in start:
+    if word2 =='':
+        return 'Not the start'
+    elif word2[0] in start:
         return 'Start'
     else:
         return 'Not the start'
@@ -100,26 +102,56 @@ def proverkaNicks(sent, index, d):
     else:
         return "Non"
     return d
-   
+
+def start(sent, index, alf, d, Name):
+    if sent[index-1] in alf:
+        a2 = proverkaNicks(sent, index, d)
+        if a2 == 'Non':
+            a1 = adding(sent, d, Name)
+    elif endsent(sent[index-1]) == 'End':
+        a2 = proverkaNicks(sent, index, d)
+        if a2 == 'Non':
+            a1 = adding(sent, d, Name)
+    return d
+
+def points(sent, index, alf, d, Name, s8):
+    if sent[index+1] in alf:
+        a2 = proverkaNicks(sent, index, d)
+        if a2 == 'Non':
+            a1 = adding(sent, d, Name)
+    elif startsent(sent[index+1]) == 'Start':
+        a2 = proverkaNicks(sent, index, d)
+        if a2 == 'Non':
+            a1 = adding(sent, d, Name)
+    if '=S,' in sent[index+1]:
+        if 'фам' in sent[index+1]:
+            a2 = proverkaNicks(sent, index, d)
+            if a2 == 'Non':
+                a1 = adding(sent, d, Name)
+        else:
+            s8.append(sent) # - для ручной проверки
+    return d
+
 def proverka2(name, sent, index, d, Name, s8):
     x = name + '=S'
     word1 = sent[index]
+    alf = '!@#$%^&*()_+=-}{[]\|":/.,…<>;«»„“'
     if x in word1:
         if endsent(word1) == 'End':
             a2 = proverkaNicks(sent, index, d)
             if a2 == 'Non':
                 a1 = adding(sent, d, Name)
-        elif startsent(sent[index+1]) == 'Start':
-            a2 = proverkaNicks(sent, index, d)
-            if a2 == 'Non':
-                a1 = adding(sent, d, Name)
-        elif '=S,' in sent[index+1]:
-            if 'фам' in sent[index+1]:
-                a2 = proverkaNicks(sent, index, d)
-                if a2 == 'Non':
-                    a1 = adding(sent, d, Name)
-            else:
-                s8.append(sent) # - для ручной проверки
+        elif index == len(sent)-1:
+            a1 = start(sent, index, alf, d, Name)
+        elif index != len(sent)-1:
+            a1 = points(sent, index, alf, d, Name, s8)
+##        elif '=S,' in sent[index+1]:
+##            if 'фам' in sent[index+1]:
+##                a2 = proverkaNicks(sent, index, d)
+##                if a2 == 'Non':
+##                    a1 = adding(sent, d, Name)
+##            else:
+##                s8.append(sent) # - для ручной проверки
         else:
             a2 = proverkaNicks(sent, index, d)
             if a2 == 'Non':
@@ -137,7 +169,7 @@ def searching(a1):
             name = a3[0].lower()
             a5 = re.findall(name, i2)
             if len(a5) == 1:
-               a6 = proverka1(sent, d)
+                a6 = proverka1(sent, d)
             elif len(a5) == 2:
                 for index in range(len(sent)):
                    if index > 1:
@@ -148,6 +180,10 @@ def searching(a1):
                        a2 = proverkaNicks(sent, index, d)
                        if a2 == 'Non':
                            a1 = adding(sent, d, a3[0])
+##    f = open('not.txt', 'a', encoding = 'utf-8')
+##    for po in s8:
+##        f.write(str(po) + '\n\n')
+##    f.close()
     return d
 
 ## структура таблицы insert into Tages values ("id", "id Text", "Name")
@@ -186,5 +222,3 @@ def final():
 
 if __name__=='__main__':
     final()
-
-
