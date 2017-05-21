@@ -138,7 +138,6 @@ def searching(list_text, reg): # - поиск в текстах
             find = actual(morph, pip) # = set
             for person in find:
                 f.write('\t'+ idd + ' ' + person + ' ' + text)
-            print('Done actuals for 1')
     f.close()
     return
 
