@@ -19,10 +19,13 @@ def endsent(word1):
     if word1[-1] in end:
         return 'End'
     else:
-        return 'Not the end'
+        if word1[-2] in end:
+            return 'End'
+        else:
+            return 'Not the end'
 
 def startsent(word2):
-    start = '(*«:;-'
+    start = '(*«:;"-'
     if word2 =='':
         return 'Not the start'
     elif word2[0] in start:
@@ -37,33 +40,6 @@ def adding(sent, d, name1):
     else:
         d[sent[0]] = set()
         d[sent[0]].add(name)
-    return d
-
-def proverka1(sent, d):
-    if sent[1].startswith('Мендель'):
-        a1 = adding(sent, d, 'Менделеев')
-    for index in range(len(sent)):
-        if index != 1:
-            word1 = sent[index]
-            if sent[1].startswith('Бубнов'):
-                if 'бубнов' in word1:
-                    a1 = adding(sent, d, 'Бубнов')
-            elif sent[1].startswith('Бeнтам'):
-                if 'бентам' in word1:
-                    a1 = adding(sent, d, 'Бентам')
-            elif sent[1].startswith('Подгорный'):
-                if 'подгорное' in word1:
-                    a1 = adding(sent, d, 'Подгоный')
-            elif sent[1].startswith('Луначарский'):
-                if 'луначарская' in word1:
-                    a1 = adding(sent, d, 'Луначарский')
-            elif sent[1].startswith('Дзержинский'):
-                if 'дзержинское' in word1:
-                    a1 = adding(sent, d, 'Дзержинский')
-            else:
-                continue
-        else:
-            continue
     return d
 
 def Lenin():
@@ -88,12 +64,23 @@ def proverkaNicks(sent, index, d):
     leni = Lenin()
     hitl = Hitler()
     stal = Stalin()
-    name = re.sub('\{.*?\}', '', sent[1])
+    name1 = re.sub('\{.*?\}', '', sent[1])
+    name = name1[0].upper() + name1[1:]
     if name in leni:
         if name == 'Ильич':
             if 'Ильич' in sent[index]:
                 if 'имя' in sent[index-1]:
                     if 'Владимир' in sent[index-1]:
+                        a1 = adding(sent, d, 'Ленин')
+                else:
+                    a1 = adding(sent, d, 'Ленин')
+        elif name == 'Ульянов':
+            if 'Ульянов' in sent[index]:
+                if 'имя' in sent[index-1]:
+                    if 'Владимир' in sent[index-1]:
+                        a1 = adding(sent, d, 'Ленин')
+                elif 'сокр' in sent[index-1]:
+                    if 'В.' in sent[index-1]:
                         a1 = adding(sent, d, 'Ленин')
                 else:
                     a1 = adding(sent, d, 'Ленин')
@@ -108,6 +95,7 @@ def proverkaNicks(sent, index, d):
     return d
 
 def start(sent, index, alf, d, Name):
+    prep = ['в', 'во', 'имени']
     if sent[index-1] in alf:
         a2 = proverkaNicks(sent, index, d)
         if a2 == 'Non':
@@ -116,6 +104,10 @@ def start(sent, index, alf, d, Name):
         a2 = proverkaNicks(sent, index, d)
         if a2 == 'Non':
             a1 = adding(sent, d, Name)
+##    elif 'имени' in sent[index-1]:
+##        return 'nope'
+    else:
+        return 'Not'
     return d
 
 def points(sent, index, alf, d, Name, s8):
@@ -123,11 +115,15 @@ def points(sent, index, alf, d, Name, s8):
         a2 = proverkaNicks(sent, index, d)
         if a2 == 'Non':
             a1 = adding(sent, d, Name)
+    elif "=CONJ" in sent[index+1]:
+        a2 = proverkaNicks(sent, index, d)
+        if a2 == 'Non':
+            a1 = adding(sent, d, Name)
     elif startsent(sent[index+1]) == 'Start':
         a2 = proverkaNicks(sent, index, d)
         if a2 == 'Non':
             a1 = adding(sent, d, Name)
-    if '=S,' in sent[index+1]:
+    elif '=S,' in sent[index+1]:
         if 'фам' in sent[index+1]:
             a2 = proverkaNicks(sent, index, d)
             if a2 == 'Non':
@@ -140,40 +136,48 @@ def proverka2(name, sent, index, d, Name, s8):
     x = name + '=S'
     word1 = sent[index]
     alf = '!@#$%^&*()_+=-}{[]\|":/.,…<>;«»„“'
-    if x in word1:
-        if endsent(word1) == 'End':
-            a2 = proverkaNicks(sent, index, d)
-            if a2 == 'Non':
-                a1 = adding(sent, d, Name)
-        elif index == len(sent)-1:
-            a1 = start(sent, index, alf, d, Name)
-        elif index != len(sent)-1:
-            a1 = points(sent, index, alf, d, Name, s8)
-        elif '=S,' in sent[index+1]:
-            if 'фам' in sent[index+1]:
+    prep = ['в', 'во', 'имени']
+    if name in word1:
+        if 'фам' in word1:
+            if endsent(word1) == 'End':
+                if sent[index-1].split('{')[0] in prep:
+                    s8.append(sent)
+                else:
+                    a2 = proverkaNicks(sent, index, d)
+                    if a2 == 'Non':
+                       a1 = adding(sent, d, Name)
+            elif index != len(sent)-1:
+                if sent[index-1].split('{')[0] in prep:
+                    s8.append(sent)
+                else:
+                    a0 = start(sent, index, alf, d, Name)
+                    if a0 == 'Not':
+                      a1 = points(sent, index, alf, d, Name, s8)                  
+            elif '=S,' in sent[index+1]:
+                if 'фам' in sent[index+1]:
+                    a2 = proverkaNicks(sent, index, d)
+                    if a2 == 'Non':
+                        a1 = adding(sent, d, Name)
+                else:
+                    s8.append(sent) # - для ручной проверки
+            else:
                 a2 = proverkaNicks(sent, index, d)
                 if a2 == 'Non':
                     a1 = adding(sent, d, Name)
-            else:
-                s8.append(sent) # - для ручной проверки
-        else:
-            a2 = proverkaNicks(sent, index, d)
-            if a2 == 'Non':
-                a1 = adding(sent, d, Name)
     return d 
     
 def context(a1):
     d = {} # {id : {surname}}
-    s8 = [] 
+    s8 = []
     for i in a1:
         if i != '':
             i2 = re.sub('\xa0', ' ', i)
             sent = i2.split(' ')
             a3 = sent[1].split('{')
-            name = a3[0].lower()
-            a5 = re.findall(name, i2)
+            a5 = re.findall('{' + a3[0] + '\??=S', i2)
+            name = a3[0]
             if len(a5) == 1:
-                a6 = proverka1(sent, d)
+                s8.append(sent)
             elif len(a5) == 2:
                 for index in range(len(sent)):
                    if index > 1:
@@ -184,7 +188,6 @@ def context(a1):
                        a2 = proverkaNicks(sent, index, d)
                        if a2 == 'Non':
                            a1 = adding(sent, d, a3[0])
-            print('done for 1')
     return d
 
 def final_test(d):
@@ -194,10 +197,10 @@ def final_test(d):
         for name in d[idd]:
             if name in names:
                 if idd in d2:
-                   d[idd].add(name)
+                   d2[idd].append(name)
                 else:
-                   d2[idd] = set()
-                   d2[idd].add(name)
+                   d2[idd] = []
+                   d2[idd].append(name)
             else:
                 continue
     return d2
