@@ -35,7 +35,7 @@ def work_with_text(): # - открываю записи/ нахожу текст
 
 # Фамилии могут изменяться по падежам по-разному, поэтому должны быть разные регулярные выражения
 
-def open_names(name): # - все фамилии 
+def open_names(name): # - все фамилии  
     f = open(name + '.txt', 'r', encoding = 'utf-8')
     array = f.read()
     f.close()
