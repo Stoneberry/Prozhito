@@ -34,7 +34,7 @@ def work_with_text(): # - открываю записи/ нахожу текст
     f = open('notes.csv', 'r', encoding = 'utf-8')
     string = f.read()
     f.close
-    list_text = finding_text(string) # -  массив всех текстов
+    list_text = finding_text(string) # -  массив всех текстов 
     return list_text
 
 ##
