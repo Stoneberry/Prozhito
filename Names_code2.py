@@ -184,7 +184,6 @@ def context(a1):
                        a2 = proverkaNicks(sent, index, d)
                        if a2 == 'Non':
                            a1 = adding(sent, d, a3[0])
-            print('done for 1')
     return d
 
 def final_test(d):
