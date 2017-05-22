@@ -161,5 +161,4 @@ def final():
 
 if __name__=='__main__':
     final()
-    tracemalloc.start()
     
