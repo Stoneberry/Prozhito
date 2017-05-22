@@ -4,6 +4,7 @@ from collections import Counter
 import os
 import pymorphy2
 import time
+from memory_profiler import profile
 
 # структура таблицы insert into Tages values ("id", "Name", "Text", *"id текста")
 
@@ -101,9 +102,8 @@ def special_ending(word, words, forms, line, name, notes): # если слово
     return line
 
 
-def regex():
+def regex(morph):
     names = open_names('list_persons')
-    morph = pymorphy2.MorphAnalyzer()
     line = ''
     for name in names:
         if ' ' in name: # - проверяю, если слово состоит из двух частей
@@ -119,26 +119,25 @@ def regex():
     return line
 
 
-def actual(morph, pip): # - восстанавливаю первоначальную форму 
+def actual(pip, morph): # - восстанавливаю первоначальную форму 
     all_names = set()
-    morph = pymorphy2.MorphAnalyzer()
     for name in pip:
         p = morph.parse(name)[0]
         all_names.add(p.normal_form)
     return all_names
 
 
-def searching(list_text, reg): # - поиск в текстах
-    morph = pymorphy2.MorphAnalyzer()
+def searching(list_text, reg, morph): # - поиск в текстах
     f = open('input_texts/rouge.txt', 'a', encoding = 'utf-8')
+    pattern = re.compile(reg)
     for idd in list_text:
         text = list_text[idd]
-        pip = re.findall(reg, text)
+        pip = pattern.findall(text)
         if pip!=[]:
-            find = actual(morph, pip) # = set
+            find = actual(pip, morph) # = set
             for person in find:
                 f.write('\t'+ idd + ' ' + person + ' ' + text)
-            print('Done actuals for 1')
+        print('Done for 1')
     f.close()
     return
 
@@ -148,15 +147,19 @@ def mystem():
     for fl in lst:
         os.system(r"/Users/Stoneberry/Desktop/курсач/mystem " + inp + os.sep + fl + " output_texts" + os.sep + fl + " -cid")
     return
-              
+
+@profile              
 def final():
     s0 = newdirs1()
     a1 = work_with_text()
-    a2 = regex()
-    a3 = searching(a1, a2)
+    morph = pymorphy2.MorphAnalyzer()
+    a2 = regex(morph)
+    a3 = searching(a1, a2, morph)
     s7 = mystem()
     print(time.clock())
     return
 
-if __name__=='__main__': 
+if __name__=='__main__':
     final()
+    tracemalloc.start()
+    
