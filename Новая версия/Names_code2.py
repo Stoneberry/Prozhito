@@ -4,6 +4,7 @@ from collections import Counter
 import os
 import time
 from Names_code import open_names
+from memory_profiler import profile
 
 # структура таблицы insert into Tages values ("id", "Name", "Text", *"id текста")
 
@@ -197,10 +198,10 @@ def final_test(d):
         for name in d[idd]:
             if name in names:
                 if idd in d2:
-                   d2[idd].append(name)
+                   d2[idd].add(name)
                 else:
-                   d2[idd] = []
-                   d2[idd].append(name)
+                   d2[idd] = set()
+                   d2[idd].add(name)
             else:
                 continue
     return d2
@@ -233,6 +234,7 @@ def numbers(values): # - специальная фунцкция для част
     f.close()
     return 
 
+@profile
 def final():
     a1 = opening()
     a3 = context(a1)
@@ -243,4 +245,5 @@ def final():
     return
 
 if __name__=='__main__':
-    final() 
+    final()
+    tracemalloc.start()
