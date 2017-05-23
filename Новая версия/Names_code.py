@@ -145,7 +145,7 @@ def mystem():
     inp = "input_texts"
     lst = os.listdir(inp)
     for fl in lst:
-        os.system(r"/Users/Stoneberry/Desktop/курсач/mystem " + inp + os.sep + fl + " output_texts" + os.sep + fl + " -cid")
+        os.system(r"mystem " + inp + os.sep + fl + " output_texts" + os.sep + fl + " -cid")
     return
 
 @profile              
