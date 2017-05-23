@@ -139,7 +139,7 @@ def proverka2(name, sent, index, d, Name, s8):
     alf = '!@#$%^&*()_+=-}{[]\|":/.,…<>;«»„“'
     prep = ['в', 'во', 'имени', 'им.', 'ул', 'пл.', 'пр-т', 'орден', 'музей', 'пр.']
     if name in word1:
-        if 'фам' in word1:
+        if 'фам' in word1: 
             if endsent(word1) == 'End':
                 if sent[index-1].split('{')[0] in prep:
                     s8.append(sent)
