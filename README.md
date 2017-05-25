@@ -39,12 +39,12 @@ http://www.examen.ru/add/manual/school-subjects/social-sciences/history/istorich
 Фунуция load() скачивает страницы перечисленных статей и с помощью регулярных выражений достает фамилии. Для каждого сайта написаны индивидуальные регулярные выражения, за которые отвечают соотвествующие функции: reg_for_person1, reg_for_person2, reg_for_person3. Сслыки сайтов хранятся в массиве, функция по очереди берет одну из них и в соответсвии с порядковым номером подбирает регулярное выражение. 
 
 <p>def load():<br>
-    links =['https://ru.wikipedia.org/wiki/100_%D1%81%D0%B0%D0%BC%D1%8B%D1%85_%D0%B2%D0%BB%D0%B8%D1%8F%D1%82%D0%B5%D0%BB%D1%8C%D0%BD%D1%8B%D1%85_%D0%BB%D1%8E%D0%B4%D0%B5%D0%B9_%D0%B2_%D0%B8%D1%81%D1%82%D0%BE%D1%80%D0%B8%D0%B8', 'http://testcons.ru/%D0%B8%D1%81%D1%82%D0%BE%D1%80%D0%B8%D1%8F-%D1%80%D0%BE%D1%81%D1%81%D0%B8%D0%B8-%D0%B4%D0%B5%D1%8F%D1%82%D0%B5%D0%BB%D0%B8-%D0%BD%D0%B0%D1%83%D0%BA%D0%B8-%D0%B8-%D0%BA%D1%83%D0%BB%D1%8C%D1%82%D1%83/', 'http://www.examen.ru/add/manual/school-subjects/social-sciences/history/istoricheskie-deyateli/istoricheskie-deyateli-rossii/voennyie-deyateli-perioda-grazhdanskoj-i-velikoj-otechestvennoj-vojn', 'http://www.examen.ru/add/manual/school-subjects/social-sciences/history/istoricheskie-deyateli/istoricheskie-deyateli-rossii/politicheskie-i-gosudarstvennyie-deyateli-sssr']<br>
+    <pre>links =['https://ru.wikipedia.org/wiki/100_%D1%81%D0%B0%D0%BC%D1%8B%D1%85_%D0%B2%D0%BB%D0%B8%D1%8F%D1%82%D0%B5%D0%BB%D1%8C%D0%BD%D1%8B%D1%85_%D0%BB%D1%8E%D0%B4%D0%B5%D0%B9_%D0%B2_%D0%B8%D1%81%D1%82%D0%BE%D1%80%D0%B8%D0%B8', 'http://testcons.ru/%D0%B8%D1%81%D1%82%D0%BE%D1%80%D0%B8%D1%8F-%D1%80%D0%BE%D1%81%D1%81%D0%B8%D0%B8-%D0%B4%D0%B5%D1%8F%D1%82%D0%B5%D0%BB%D0%B8-%D0%BD%D0%B0%D1%83%D0%BA%D0%B8-%D0%B8-%D0%BA%D1%83%D0%BB%D1%8C%D1%82%D1%83/', 'http://www.examen.ru/add/manual/school-subjects/social-sciences/history/istoricheskie-deyateli/istoricheskie-deyateli-rossii/voennyie-deyateli-perioda-grazhdanskoj-i-velikoj-otechestvennoj-vojn', 'http://www.examen.ru/add/manual/school-subjects/social-sciences/history/istoricheskie-deyateli/istoricheskie-deyateli-rossii/politicheskie-i-gosudarstvennyie-deyateli-sssr']<br>
     mnoj_person = set()<br>
-    for link in links:<br>
-        req = urllib.request.Request(link)<br>
+    for link in links:</pre><br></p>
+      <p>req = urllib.request.Request(link)<br>
         with urllib.request.urlopen(req) as response:<br>
-            html = response.read().decode('utf-8')<br>
+            html = response.read().decode('utf-8')
             if link == links[0]:<br>
                 mnoj = reg_for_person1(html, mnoj_person)<br>
             elif link == links[1]:
@@ -89,19 +89,19 @@ if name in specials:<br>
     
  Когда регулярное выражение готово, по очереди берется каждая запись из базы данных и с помощью регулярного выражения находятся совпадения (функция searching). На выходе для каждой такой записи получается массив, в котором перечислены найденные фамилии. Все эти вхождения могут быть в разных падежах и числах, что не подходит для записи в качестве тега.  Поэтому с помощью pymorphy2 восстанавливаются «нормальные формы», то есть к форме именительного падежа единственного числа, получившийся результат записывается во множество (функция actual).    
     
-def searching(list_text, reg, morph): # - поиск в текстах
-    f = open('input_texts/rouge.txt', 'a', encoding = 'utf-8')
-    pattern = re.compile(reg)
-    for idd in list_text:
-        text = list_text[idd]
-        pip = pattern.findall(text)
-        if pip!=[]:
-            find = actual(pip, morph) # = set
-            for person in find:
-                f.write('\t'+ idd + ' ' + person + ' ' + text)
-        print('Done for 1')
-    f.close()
-    return
+<p>def searching(list_text, reg, morph): # - поиск в текстах<br>
+    f = open('input_texts/rouge.txt', 'a', encoding = 'utf-8')<br>
+    pattern = re.compile(reg)<br>
+    for idd in list_text:<br>
+        text = list_text[idd]<br>
+        pip = pattern.findall(text)<br>
+        if pip!=[]:<br>
+            find = actual(pip, morph) # = set<br>
+            for person in find:<br>
+                f.write('\t'+ idd + ' ' + person + ' ' + text)<br>
+        print('Done for 1')<br>
+    f.close()<br>
+    return</p>
     
 Каждое такое вхождение записывается в новый файл в следующем виде: сначала идет id записи, далее фамилия личности (предполагаемый тег) и сам текст записи.  Если в тексте встретилось несколько фамилий, то для каждой из них создается отдельная строка, по уже заданной модели. Этот файл помещается в заранее созданную папку (функция newdirs), из которой программа Mystem достает его и производит морфологический разбор, помещает результат в папку (функция mystem). На этом вторая часть кода завершает работу.
 
@@ -112,29 +112,29 @@ def searching(list_text, reg, morph): # - поиск в текстах
 
 Функция opening достает из разобранного с помощью MyStem файла записи, в которых нашлись фамилии. Каждая такая запись в функции searching делится по пробелам на слова. Затем программа проверяет сколько раз встретилась фамилия, которая записана после id текста (включая саму эту фамилию, которую дальше будет именоваться как экземпляр). В зависимости от того, насколько часто встретилось слово в записи, применялись разные условия проверки.
 
-def context(a1):
-    d = {} # {id : {surname}}
-    s8 = []
-    for i in a1:
-        if i != '':
-            i2 = re.sub('\xa0', ' ', i)
-            sent = i2.split(' ')
-            a3 = sent[1].split('{')
-            a5 = re.findall('{' + a3[0] + '\??=S', i2)
-            name = a3[0]
-            if len(a5) == 1:
-                s8.append(sent)
-            elif len(a5) == 2:
-                for index in range(len(sent)):
-                   if index > 1:
-                       a4 = proverka2(name, sent, index, d, a3[0], s8)
-            else: # - если имя употребляется больше 1 раза в тексте, то скорее всего омонимии не будет
-                for index in range(len(sent)):
-                   if index > 1:
-                       a2 = proverkaNicks(sent, index, d)
-                       if a2 == 'Non':
-                           a1 = adding(sent, d, a3[0])
-    return d
+<p>def context(a1):<br>
+    d = {} # {id : {surname}}<br>
+    s8 = []<br>
+    for i in a1:<br>
+        if i != '':<br>
+            i2 = re.sub('\xa0', ' ', i)<br>
+            sent = i2.split(' ')<br>
+            a3 = sent[1].split('{')<br>
+            a5 = re.findall('{' + a3[0] + '\??=S', i2)<br>
+            name = a3[0]<br>
+            if len(a5) == 1:<br>
+                s8.append(sent)<br>
+            elif len(a5) == 2:<br>
+                for index in range(len(sent)):<br>
+                   if index > 1:<br>
+                       a4 = proverka2(name, sent, index, d, a3[0], s8)<br>
+            else: # - если имя употребляется больше 1 раза в тексте, то скорее всего омонимии не будет<br>
+                for index in range(len(sent)):<br>
+                   if index > 1:<br>
+                       a2 = proverkaNicks(sent, index, d)<br>
+                       if a2 == 'Non':<br>
+                           a1 = adding(sent, d, a3[0])<br>
+    return d</p>
 
 Если фамилия встретилась всего один раз, это значит, что в самом разборе текста записи не встретилось точного соответствия заданному экземпляру. Проблема в том, что MyStem и pymorphy2 не всегда верно производят морфологический разбор для некоторых фамилий, поэтому данные случаи отсеиваются. 
 
