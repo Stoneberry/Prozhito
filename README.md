@@ -41,8 +41,8 @@ http://www.examen.ru/add/manual/school-subjects/social-sciences/history/istorich
 <p>def load():<br>
     <pre>links =['https://ru.wikipedia.org/wiki/100_%D1%81%D0%B0%D0%BC%D1%8B%D1%85_%D0%B2%D0%BB%D0%B8%D1%8F%D1%82%D0%B5%D0%BB%D1%8C%D0%BD%D1%8B%D1%85_%D0%BB%D1%8E%D0%B4%D0%B5%D0%B9_%D0%B2_%D0%B8%D1%81%D1%82%D0%BE%D1%80%D0%B8%D0%B8', 'http://testcons.ru/%D0%B8%D1%81%D1%82%D0%BE%D1%80%D0%B8%D1%8F-%D1%80%D0%BE%D1%81%D1%81%D0%B8%D0%B8-%D0%B4%D0%B5%D1%8F%D1%82%D0%B5%D0%BB%D0%B8-%D0%BD%D0%B0%D1%83%D0%BA%D0%B8-%D0%B8-%D0%BA%D1%83%D0%BB%D1%8C%D1%82%D1%83/', 'http://www.examen.ru/add/manual/school-subjects/social-sciences/history/istoricheskie-deyateli/istoricheskie-deyateli-rossii/voennyie-deyateli-perioda-grazhdanskoj-i-velikoj-otechestvennoj-vojn', 'http://www.examen.ru/add/manual/school-subjects/social-sciences/history/istoricheskie-deyateli/istoricheskie-deyateli-rossii/politicheskie-i-gosudarstvennyie-deyateli-sssr']<br>
     mnoj_person = set()<br>
-    for link in links:</pre><br></p>
-      <p>req = urllib.request.Request(link)<br>
+    for link in links:<br>
+    req = urllib.request.Request(link)<br>
         with urllib.request.urlopen(req) as response:<br>
             html = response.read().decode('utf-8')
             if link == links[0]:<br>
@@ -51,7 +51,7 @@ http://www.examen.ru/add/manual/school-subjects/social-sciences/history/istorich
                 mnoj = reg_for_person3(html, mnoj_person)<br>
             else:
                 mnoj = reg_for_person2(html, mnoj_person)<br>
-    return mnoj_person<br></p>
+    return mnoj_person</pre></p>
 
 Все полученные фамилии записываются во множество, чтобы избежать повторений, и записываются в файл с помощью функции new_file, которая на вход получает будущее название файла и содержание файла(В данном случае это множество фамилий). Клички, которые ранее были записаны в файлы (название файла соответсвует настоящей фамилии личности), так же добавляются к общему списку. 
 
