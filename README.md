@@ -1,13 +1,5 @@
 # Prozhito
 
-{
- "cells": [
-  {
-   "cell_type": "markdown",
-  }
-  ]
- }
-
 <b>"Прожито"</b> - это огромная база оцифрованных текстов из личных дневников, датированных XVIII - XX веками, в которой можно найти все записи за определённую дату. Темой курсовой является автоматическая разметка дневников проекта, а именно присваивание текстам тэгов с именами упоминаемых в них личностей.
 
 Окончательный код программы лежит в папке "Новая версия". 
@@ -46,20 +38,20 @@ http://www.examen.ru/add/manual/school-subjects/social-sciences/history/istorich
 
 Фунуция load() скачивает страницы перечисленных статей и с помощью регулярных выражений достает фамилии. Для каждого сайта написаны индивидуальные регулярные выражения, за которые отвечают соотвествующие функции: reg_for_person1, reg_for_person2, reg_for_person3. Сслыки сайтов хранятся в массиве, функция по очереди берет одну из них и в соответсвии с порядковым номером подбирает регулярное выражение. 
 
-def load():
-    links =['https://ru.wikipedia.org/wiki/100_%D1%81%D0%B0%D0%BC%D1%8B%D1%85_%D0%B2%D0%BB%D0%B8%D1%8F%D1%82%D0%B5%D0%BB%D1%8C%D0%BD%D1%8B%D1%85_%D0%BB%D1%8E%D0%B4%D0%B5%D0%B9_%D0%B2_%D0%B8%D1%81%D1%82%D0%BE%D1%80%D0%B8%D0%B8', 'http://testcons.ru/%D0%B8%D1%81%D1%82%D0%BE%D1%80%D0%B8%D1%8F-%D1%80%D0%BE%D1%81%D1%81%D0%B8%D0%B8-%D0%B4%D0%B5%D1%8F%D1%82%D0%B5%D0%BB%D0%B8-%D0%BD%D0%B0%D1%83%D0%BA%D0%B8-%D0%B8-%D0%BA%D1%83%D0%BB%D1%8C%D1%82%D1%83/', 'http://www.examen.ru/add/manual/school-subjects/social-sciences/history/istoricheskie-deyateli/istoricheskie-deyateli-rossii/voennyie-deyateli-perioda-grazhdanskoj-i-velikoj-otechestvennoj-vojn', 'http://www.examen.ru/add/manual/school-subjects/social-sciences/history/istoricheskie-deyateli/istoricheskie-deyateli-rossii/politicheskie-i-gosudarstvennyie-deyateli-sssr']
-    mnoj_person = set()
-    for link in links:
-        req = urllib.request.Request(link)
-        with urllib.request.urlopen(req) as response:
-            html = response.read().decode('utf-8')
-            if link == links[0]:
-                mnoj = reg_for_person1(html, mnoj_person)
+<p>def load():<br>
+    links =['https://ru.wikipedia.org/wiki/100_%D1%81%D0%B0%D0%BC%D1%8B%D1%85_%D0%B2%D0%BB%D0%B8%D1%8F%D1%82%D0%B5%D0%BB%D1%8C%D0%BD%D1%8B%D1%85_%D0%BB%D1%8E%D0%B4%D0%B5%D0%B9_%D0%B2_%D0%B8%D1%81%D1%82%D0%BE%D1%80%D0%B8%D0%B8', 'http://testcons.ru/%D0%B8%D1%81%D1%82%D0%BE%D1%80%D0%B8%D1%8F-%D1%80%D0%BE%D1%81%D1%81%D0%B8%D0%B8-%D0%B4%D0%B5%D1%8F%D1%82%D0%B5%D0%BB%D0%B8-%D0%BD%D0%B0%D1%83%D0%BA%D0%B8-%D0%B8-%D0%BA%D1%83%D0%BB%D1%8C%D1%82%D1%83/', 'http://www.examen.ru/add/manual/school-subjects/social-sciences/history/istoricheskie-deyateli/istoricheskie-deyateli-rossii/voennyie-deyateli-perioda-grazhdanskoj-i-velikoj-otechestvennoj-vojn', 'http://www.examen.ru/add/manual/school-subjects/social-sciences/history/istoricheskie-deyateli/istoricheskie-deyateli-rossii/politicheskie-i-gosudarstvennyie-deyateli-sssr']<br>
+    mnoj_person = set()<br>
+    for link in links:<br>
+        req = urllib.request.Request(link)<br>
+        with urllib.request.urlopen(req) as response:<br>
+            html = response.read().decode('utf-8')<br>
+            if link == links[0]:<br>
+                mnoj = reg_for_person1(html, mnoj_person)<br>
             elif link == links[1]:
-                mnoj = reg_for_person3(html, mnoj_person)
+                mnoj = reg_for_person3(html, mnoj_person)<br>
             else:
-                mnoj = reg_for_person2(html, mnoj_person)
-    return mnoj_person
+                mnoj = reg_for_person2(html, mnoj_person)<br>
+    return mnoj_person<br></p>
 
 Все полученные фамилии записываются во множество, чтобы избежать повторений, и записываются в файл с помощью функции new_file, которая на вход получает будущее название файла и содержание файла(В данном случае это множество фамилий). Клички, которые ранее были записаны в файлы (название файла соответсвует настоящей фамилии личности), так же добавляются к общему списку. 
 
@@ -71,42 +63,29 @@ def load():
 Функиция  regex - далее из созданного файла из предыдущей части кода достаются фамилии и для каждой из них с помощью pymorphy2 генерируются формы слова (функция form) и соединяются в единое регулярное выражение (line). Регулярное выражение  состоит из частей, которые создаются по отдельности, а потом соединяются в одну строчку. Каждая часть представляет собой фамилию с набором окончаний для всех существующих для нее форм и специального разделителя «|», который отделяет одну фамилию от другой. 
 Чтобы не перечислять через разделитель все словоформы, фамилия делится на две части «основу» и «окончание» (функция ending). Основой считается первые три буквы слова, а окончанием - оставшиеся. Так как pymorphy2 автоматически приводит все слова к нижнему регистру, то программа восстанавливает заглавную букву, в том случае, если слово с таковой писалось (функция capital).  Если слово  состоит из нескольких частей, например, кличка Иосифа Сталина «Дядя Джо», то разбор производится для каждой составляющей по отдельности, а потом соединяются во едино и добавляется к общему регулярному выражению (функция special_ending). Pymorphy2 не всегда верно определяет формы слов, поэтому для некоторых из них окончания были прописаны вручную (функция normal_ending). 
 
-{
-   "cell_type": "code",
-   "execution_count": 1,
-   "metadata": {
-    "collapsed": true
-   },
-   "outputs": [],
-   "source": [
-    "from pymystem3 import Mystem\n",
-    "import pymorphy2"
-   ]
-  }
-...
-special = ['Рыков', 'Кампрад', 'Рудзутак', 'Брэнсон', 'Брин', 'Каменев', 'Теллер', 'Фридан', 'Горбачёв', 'Найт', 'Дьюар', 'Бик', 'Клаузевиц', 'Бах', 'Булгаиин', 'Белл', 'Делл', 'Баффетт', 'Лютер', 'Зворыкин', 'Бентам', 'Диор', 'Эттингер']
-...
-"if name in specials:\n"
-"     line = normal_ending(name, line, names)\n"
- ...
+<p>...
+special = ['Рыков', 'Кампрад', 'Рудзутак', 'Брэнсон', 'Брин', 'Каменев', 'Теллер', 'Фридан', 'Горбачёв', 'Найт', 'Дьюар', 'Бик', 'Клаузевиц', 'Бах', 'Булгаиин', 'Белл', 'Делл', 'Баффетт', 'Лютер', 'Зворыкин', 'Бентам', 'Диор', 'Эттингер']<br>
+...<br>
+if name in specials:<br>
+     line = normal_ending(name, line, names)<br>
+...</p>
  
- 
-def normal_ending(normal, surname, massiv_surnames_normal):
-	if normal.endswith('народов'):
-		a1 = normal.split(' ')
-		name2 = a1[0][:2] + '(?:ец|ца|цу|цом|це|цы|цов|цах|цами|цам) ' + a1[1] + '\\b' + '|'
-		surname = surname + name2
-	elif normal.endswith('Виссарионович'):
-		a1 = normal.split(' ')
-        name2 = a1[0] + '(?:\\b|а|у|ом|е|ов|ы|ам|ами|ах) ' + a1[1] + '(?:\\b|а|у|ом|е|ов|ы|ам|ами|ах)' + '\\b' + '|'
-        surname = surname + name2
-    elif normal == massiv_surnames_normal[-1]:
-        name2 = normal + '(?:\\b|а|у|ом|е|ов|ы|ам|ами|ах)' + '\\b'
-        surname = surname + name2
-    else:
-        name2 = normal + '(?:\\b|а|у|ом|е|ов|ы|ам|ами|ах)' + '\\b' + '|'
-        surname = surname + name2
-    return surname
+<p>def normal_ending(normal, surname, massiv_surnames_normal):<br>
+	if normal.endswith('народов'):<br>
+		a1 = normal.split(' ')<br>
+		name2 = a1[0][:2] + '(?:ец|ца|цу|цом|це|цы|цов|цах|цами|цам) ' + a1[1] + '\\b' + '|'<br>
+		surname = surname + name2<br>
+	elif normal.endswith('Виссарионович'):<br>
+		a1 = normal.split(' ')<br>
+        name2 = a1[0] + '(?:\\b|а|у|ом|е|ов|ы|ам|ами|ах) ' + a1[1] + '(?:\\b|а|у|ом|е|ов|ы|ам|ами|ах)' + '\\b' + '|'<br>
+        surname = surname + name2<br>
+    elif normal == massiv_surnames_normal[-1]:<br>
+        name2 = normal + '(?:\\b|а|у|ом|е|ов|ы|ам|ами|ах)' + '\\b'<br>
+        surname = surname + name2<br>
+    else:<br>
+        name2 = normal + '(?:\\b|а|у|ом|е|ов|ы|ам|ами|ах)' + '\\b' + '|'<br>
+        surname = surname + name2<br>
+    return surname</p>
     
  Когда регулярное выражение готово, по очереди берется каждая запись из базы данных и с помощью регулярного выражения находятся совпадения (функция searching). На выходе для каждой такой записи получается массив, в котором перечислены найденные фамилии. Все эти вхождения могут быть в разных падежах и числах, что не подходит для записи в качестве тега.  Поэтому с помощью pymorphy2 восстанавливаются «нормальные формы», то есть к форме именительного падежа единственного числа, получившийся результат записывается во множество (функция actual).    
     
