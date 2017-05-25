@@ -71,12 +71,12 @@ if name in specials:<br>
 ...</pre></p>
  
 <p><pre>def normal_ending(normal, surname, massiv_surnames_normal):<br>
-	if normal.endswith('народов'):<br>
-		a1 = normal.split(' ')<br>
-		name2 = a1[0][:2] + '(?:ец|ца|цу|цом|це|цы|цов|цах|цами|цам) ' + a1[1] + '\\b' + '|'<br>
-		surname = surname + name2<br>
-	elif normal.endswith('Виссарионович'):<br>
-		a1 = normal.split(' ')<br>
+    if normal.endswith('народов'):<br>
+	a1 = normal.split(' ')<br>
+	name2 = a1[0][:2] + '(?:ец|ца|цу|цом|це|цы|цов|цах|цами|цам) ' + a1[1] + '\\b' + '|'<br>
+	surname = surname + name2<br>
+    elif normal.endswith('Виссарионович'):<br>
+	a1 = normal.split(' ')<br>
         name2 = a1[0] + '(?:\\b|а|у|ом|е|ов|ы|ам|ами|ах) ' + a1[1] + '(?:\\b|а|у|ом|е|ов|ы|ам|ами|ах)' + '\\b' + '|'<br>
         surname = surname + name2<br>
     elif normal == massiv_surnames_normal[-1]:<br>
