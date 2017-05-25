@@ -70,7 +70,7 @@ if name in specials:
     line = normal_ending(name, line, names)
  ...
  
-def normal_ending(normal, surname, massiv_surnames_normal):
+def normal_ending(normal, surname, massiv_surnames_normal):\n
     if normal.endswith('народов'):
         a1 = normal.split(' ')
         name2 = a1[0][:2] + '(?:ец|ца|цу|цом|це|цы|цов|цах|цами|цам) ' + a1[1] + '\\b' + '|'
