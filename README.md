@@ -38,8 +38,8 @@ http://www.examen.ru/add/manual/school-subjects/social-sciences/history/istorich
 
 Фунуция load() скачивает страницы перечисленных статей и с помощью регулярных выражений достает фамилии. Для каждого сайта написаны индивидуальные регулярные выражения, за которые отвечают соотвествующие функции: reg_for_person1, reg_for_person2, reg_for_person3. Сслыки сайтов хранятся в массиве, функция по очереди берет одну из них и в соответсвии с порядковым номером подбирает регулярное выражение. 
 
-<p>def load():<br>
-    <pre>links =['https://ru.wikipedia.org/wiki/100_%D1%81%D0%B0%D0%BC%D1%8B%D1%85_%D0%B2%D0%BB%D0%B8%D1%8F%D1%82%D0%B5%D0%BB%D1%8C%D0%BD%D1%8B%D1%85_%D0%BB%D1%8E%D0%B4%D0%B5%D0%B9_%D0%B2_%D0%B8%D1%81%D1%82%D0%BE%D1%80%D0%B8%D0%B8', 'http://testcons.ru/%D0%B8%D1%81%D1%82%D0%BE%D1%80%D0%B8%D1%8F-%D1%80%D0%BE%D1%81%D1%81%D0%B8%D0%B8-%D0%B4%D0%B5%D1%8F%D1%82%D0%B5%D0%BB%D0%B8-%D0%BD%D0%B0%D1%83%D0%BA%D0%B8-%D0%B8-%D0%BA%D1%83%D0%BB%D1%8C%D1%82%D1%83/', 'http://www.examen.ru/add/manual/school-subjects/social-sciences/history/istoricheskie-deyateli/istoricheskie-deyateli-rossii/voennyie-deyateli-perioda-grazhdanskoj-i-velikoj-otechestvennoj-vojn', 'http://www.examen.ru/add/manual/school-subjects/social-sciences/history/istoricheskie-deyateli/istoricheskie-deyateli-rossii/politicheskie-i-gosudarstvennyie-deyateli-sssr']<br>
+<p><pre>def load():<br>
+    links =['https://ru.wikipedia.org/wiki/100_%D1%81%D0%B0%D0%BC%D1%8B%D1%85_%D0%B2%D0%BB%D0%B8%D1%8F%D1%82%D0%B5%D0%BB%D1%8C%D0%BD%D1%8B%D1%85_%D0%BB%D1%8E%D0%B4%D0%B5%D0%B9_%D0%B2_%D0%B8%D1%81%D1%82%D0%BE%D1%80%D0%B8%D0%B8', 'http://testcons.ru/%D0%B8%D1%81%D1%82%D0%BE%D1%80%D0%B8%D1%8F-%D1%80%D0%BE%D1%81%D1%81%D0%B8%D0%B8-%D0%B4%D0%B5%D1%8F%D1%82%D0%B5%D0%BB%D0%B8-%D0%BD%D0%B0%D1%83%D0%BA%D0%B8-%D0%B8-%D0%BA%D1%83%D0%BB%D1%8C%D1%82%D1%83/', 'http://www.examen.ru/add/manual/school-subjects/social-sciences/history/istoricheskie-deyateli/istoricheskie-deyateli-rossii/voennyie-deyateli-perioda-grazhdanskoj-i-velikoj-otechestvennoj-vojn', 'http://www.examen.ru/add/manual/school-subjects/social-sciences/history/istoricheskie-deyateli/istoricheskie-deyateli-rossii/politicheskie-i-gosudarstvennyie-deyateli-sssr']<br>
     mnoj_person = set()<br>
     for link in links:<br>
     req = urllib.request.Request(link)<br>
@@ -70,8 +70,8 @@ if name in specials:<br>
      line = normal_ending(name, line, names)<br>
 ...</pre></p>
  
-<p>def normal_ending(normal, surname, massiv_surnames_normal):<br>
-	<pre>if normal.endswith('народов'):<br>
+<p><pre>def normal_ending(normal, surname, massiv_surnames_normal):<br>
+	if normal.endswith('народов'):<br>
 		a1 = normal.split(' ')<br>
 		name2 = a1[0][:2] + '(?:ец|ца|цу|цом|це|цы|цов|цах|цами|цам) ' + a1[1] + '\\b' + '|'<br>
 		surname = surname + name2<br>
@@ -112,8 +112,8 @@ if name in specials:<br>
 
 Функция opening достает из разобранного с помощью MyStem файла записи, в которых нашлись фамилии. Каждая такая запись в функции searching делится по пробелам на слова. Затем программа проверяет сколько раз встретилась фамилия, которая записана после id текста (включая саму эту фамилию, которую дальше будет именоваться как экземпляр). В зависимости от того, насколько часто встретилось слово в записи, применялись разные условия проверки.
 
-<p>def context(a1):<br>
-    <pre>d = {} # {id : {surname}}<br>
+<p><pre>def context(a1):<br>
+    d = {} # {id : {surname}}<br>
     s8 = []<br>
     for i in a1:<br>
         if i != '':<br>
